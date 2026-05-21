@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — spurlos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; margin: 0; }
+    header { background: #111; color: #fff; padding: .75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #fff; text-decoration: none; font-size: .875rem; }
+    header a:hover { text-decoration: underline; }
+    main { padding: 2rem 1.5rem; }
+    h1 { margin: 0 0 .25rem; font-size: 1.4rem; }
+    p { color: #6b7280; }
+  </style>
+</head>
+<body>
+<header>
+  <span>spurlos</span>
+  <span>
+    {{ request.user.first_name}} {{ request.user.last_name}}&middot;
+    <a href="{% url 'password_change' %}">Change password</a> &middot;
+    <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" style="background:none;border:none;color:#fff;font-size:.875rem;cursor:pointer;padding:0">Sign out</button></form>
+  </span>
+</header>
+<main>
+  <h1>Welcome, {{ request.user.first_name }}.</h1>
+  <p>This is your dashboard — add content here.</p>
+</main>
+</body>
+</html>
