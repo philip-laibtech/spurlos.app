@@ -1,0 +1,14 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}Delete {{ company.name }} – spurlos{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;margin:48px auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);text-align:center;">
+  <h1 style="font-size:1.25rem;font-weight:700;color:#0f172a;margin:0 0 12px;">Delete {{ company.name }}?</h1>
+  <p style="color:#64748b;font-size:.875rem;margin:0 0 24px;">This will archive the company. The record will no longer appear in the company list but will not be permanently removed.</p>
+  <form method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="background:#ef4444;color:#fff;padding:10px 20px;border:none;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;margin-right:12px;">Confirm Delete</button>
+  </form>
+  <a href="{% url 'crm:company_detail' company.pk %}" style="padding:10px 20px;border-radius:8px;font-size:.875rem;color:#64748b;text-decoration:none;background:#f1f5f9;">Cancel</a>
+</div>
+{% endblock %}

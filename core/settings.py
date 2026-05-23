@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'dashboard',
+    'crm',
 ]
 
 LOGIN_URL = '/accounts/login/'

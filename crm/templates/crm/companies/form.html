@@ -1,0 +1,41 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}{% if object %}Edit {{ object.name }}{% else %}Add Company{% endif %} – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+  <a href="{% if object %}{% url 'crm:company_detail' object.pk %}{% else %}{% url 'crm:company_list' %}{% endif %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; {% if object %}{{ object.name }}{% else %}Companies{% endif %}</a>
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{% if object %}Edit {{ object.name }}{% else %}Add Company{% endif %}</h1>
+</div>
+
+<form method="post" novalidate style="max-width:800px;">
+  {% csrf_token %}
+
+  <div style="background:#fff;padding:32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:24px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 32px;">
+      {% for field in form %}
+      <div style="
+        {% if field.html_name == 'notes' or field.html_name == 'legal_name' %}grid-column:1/-1;{% endif %}
+      ">
+        <label style="display:block;font-size:.875rem;font-weight:500;color:#374151;margin-bottom:6px;" for="{{ field.id_for_label }}">
+          {{ field.label }}
+        </label>
+        {{ field }}
+        {% if field.help_text %}
+        <p style="margin:4px 0 0;font-size:.75rem;color:#94a3b8;">{{ field.help_text }}</p>
+        {% endif %}
+        {% if field.errors %}
+        <ul style="margin:4px 0 0;padding-left:16px;color:#ef4444;font-size:.8rem;">
+          {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;">
+    <button type="submit" style="background:#1d4ed8;color:#fff;padding:10px 24px;border:none;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;">Save</button>
+    <a href="{% if object %}{% url 'crm:company_detail' object.pk %}{% else %}{% url 'crm:company_list' %}{% endif %}" style="padding:10px 20px;border-radius:8px;font-size:.875rem;color:#64748b;text-decoration:none;background:#f1f5f9;">Cancel</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}Contacts – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">Contacts</h1>
+  <a href="{% url 'crm:contact_create' %}" style="background:#1d4ed8;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">+ Add Contact</a>
+</div>
+
+{% if contacts %}
+<table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+  <thead>
+    <tr style="background:#f1f5f9;">
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Name</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Company</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Title</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Status</th>
+      <th style="padding:12px 16px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for contact in contacts %}
+    <tr style="border-top:1px solid #e2e8f0;">
+      <td style="padding:14px 16px;font-weight:500;">
+        <a href="{% url 'crm:contact_detail' contact.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ contact }}</a>
+      </td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{% if contact.company %}<a href="{% url 'crm:company_detail' contact.company.pk %}" style="color:#64748b;text-decoration:none;">{{ contact.company.name }}</a>{% else %}—{% endif %}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ contact.job_title|default:"—" }}</td>
+      <td style="padding:14px 16px;font-size:.875rem;">
+        <span style="background:#f0fdf4;color:#15803d;padding:2px 10px;border-radius:9999px;font-size:.75rem;font-weight:500;">{{ contact.get_status_display }}</span>
+      </td>
+      <td style="padding:14px 16px;text-align:right;">
+        <a href="{% url 'crm:contact_update' contact.pk %}" style="color:#64748b;font-size:.875rem;text-decoration:none;margin-right:12px;">Edit</a>
+        <a href="{% url 'crm:contact_delete' contact.pk %}" style="color:#ef4444;font-size:.875rem;text-decoration:none;">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:#64748b;">No contacts yet. <a href="{% url 'crm:contact_create' %}">Add the first one.</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}spurlos{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; }
+
+    /* ── Layout shell ── */
+    .app-layout { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: width .22s ease;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .sidebar.collapsed { width: 64px; }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 56px;
+      border-bottom: 1px solid #1e293b;
+      flex-shrink: 0;
+    }
+    .logo {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.125rem;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      transition: opacity .18s, width .22s;
+      flex: 1;
+    }
+    .sidebar.collapsed .logo { opacity: 0; width: 0; flex: 0; }
+
+    .sidebar-toggle {
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+    }
+    .sidebar-toggle:hover { background: #1e293b; color: #fff; }
+
+    .sidebar-nav {
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .nav-item:hover { background: #1e293b; color: #e2e8f0; }
+    .nav-item.active { background: #1d4ed8; color: #fff; }
+    .nav-item svg { flex-shrink: 0; }
+    .nav-label { overflow: hidden; transition: opacity .18s; }
+    .sidebar.collapsed .nav-label { opacity: 0; width: 0; }
+
+    /* ── Main wrapper ── */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 24px;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: .875rem;
+      color: #64748b;
+    }
+    .topbar-user a { color: #3b82f6; text-decoration: none; }
+    .topbar-user a:hover { text-decoration: underline; }
+    .topbar-separator { color: #cbd5e1; }
+    .topbar-user form { display: inline; }
+    .topbar-signout {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: .875rem;
+      cursor: pointer;
+      padding: 0;
+      font-family: inherit;
+    }
+    .topbar-signout:hover { color: #0f172a; }
+
+    /* ── Page content ── */
+    .page-content { padding: 32px; flex: 1; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-header">
+      <span class="logo">spurlos</span>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="{% url 'dashboard' %}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="{% url 'crm:contact_list' %}" class="nav-item {% if active_page == 'contacts' %}active{% endif %}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span class="nav-label">Contacts</span>
+      </a>
+      <a href="{% url 'crm:company_list' %}" class="nav-item {% if active_page == 'companies' %}active{% endif %}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+        </svg>
+        <span class="nav-label">Companies</span>
+      </a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-user">
+        <span>{{ request.user.first_name }} {{ request.user.last_name }}</span>
+        <span class="topbar-separator">&middot;</span>
+        <a href="{% url 'password_change' %}">Change password</a>
+        <span class="topbar-separator">&middot;</span>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="topbar-signout">Sign out</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var sidebar = document.getElementById('appSidebar');
+    var btn = document.getElementById('sidebarToggle');
+    var KEY = 'spurlos_sidebar_collapsed';
+
+    if (localStorage.getItem(KEY) === '1') sidebar.classList.add('collapsed');
+
+    btn.addEventListener('click', function () {
+      var collapsed = sidebar.classList.toggle('collapsed');
+      localStorage.setItem(KEY, collapsed ? '1' : '0');
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}{{ contact }} – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+  <a href="{% url 'crm:contact_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; Contacts</a>
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{% if contact.salutation %}{{ contact.get_salutation_display }} {% endif %}{{ contact }}</h1>
+  <div style="margin-left:auto;display:flex;gap:8px;">
+    <a href="{% url 'crm:contact_update' contact.pk %}" style="background:#f1f5f9;color:#0f172a;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Edit</a>
+    <a href="{% url 'crm:contact_delete' contact.pk %}" style="background:#fef2f2;color:#ef4444;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Delete</a>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+  <div style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+    <h2 style="margin:0 0 16px;font-size:1rem;font-weight:600;color:#0f172a;">Details</h2>
+    <dl style="display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:.875rem;">
+      <dt style="color:#64748b;font-weight:500;">Anrede</dt><dd style="margin:0;">{{ contact.get_salutation_display|default:"—" }}</dd>
+      <dt style="color:#64748b;font-weight:500;">Company</dt>
+      <dd style="margin:0;">{% if contact.company %}<a href="{% url 'crm:company_detail' contact.company.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ contact.company.name }}</a>{% else %}—{% endif %}</dd>
+      <dt style="color:#64748b;font-weight:500;">Job Title</dt><dd style="margin:0;">{{ contact.job_title|default:"—" }}</dd>
+      <dt style="color:#64748b;font-weight:500;">Department</dt><dd style="margin:0;">{{ contact.department|default:"—" }}</dd>
+      <dt style="color:#64748b;font-weight:500;">Status</dt><dd style="margin:0;">{{ contact.get_status_display }}</dd>
+      <dt style="color:#64748b;font-weight:500;">Language</dt><dd style="margin:0;">{{ contact.get_preferred_language_display|default:"—" }}</dd>
+      <dt style="color:#64748b;font-weight:500;">Birthday</dt><dd style="margin:0;">{{ contact.birthday|default:"—" }}</dd>
+    </dl>
+    {% if contact.notes %}
+    <p style="margin:16px 0 0;font-size:.875rem;color:#475569;">{{ contact.notes }}</p>
+    {% endif %}
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:24px;">
+    <div style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+      <h2 style="margin:0 0 12px;font-size:1rem;font-weight:600;color:#0f172a;">Email Addresses</h2>
+      {% if contact.email_addresses.all %}
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;">
+        {% for email in contact.email_addresses.all %}
+        <li style="font-size:.875rem;color:#334155;">{{ email.email }} <span style="color:#94a3b8;">({{ email.get_type_display }})</span>{% if email.is_primary %} <span style="color:#1d4ed8;font-size:.75rem;font-weight:500;">Primary</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p style="color:#94a3b8;font-size:.875rem;margin:0;">No email addresses.</p>
+      {% endif %}
+    </div>
+
+    <div style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+      <h2 style="margin:0 0 12px;font-size:1rem;font-weight:600;color:#0f172a;">Phone Numbers</h2>
+      {% if contact.phone_numbers.all %}
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;">
+        {% for phone in contact.phone_numbers.all %}
+        <li style="font-size:.875rem;color:#334155;">{{ phone.phone_number }} <span style="color:#94a3b8;">({{ phone.get_type_display }}{% if phone.label %} – {{ phone.label }}{% endif %})</span>{% if phone.is_primary %} <span style="color:#1d4ed8;font-size:.75rem;font-weight:500;">Primary</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p style="color:#94a3b8;font-size:.875rem;margin:0;">No phone numbers.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
