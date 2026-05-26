@@ -10,4 +10,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('crm/', include('crm.urls', namespace='crm')),
+    path('projects/', include('projects.urls', namespace='projects')),
 ]

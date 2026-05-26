@@ -7,6 +7,7 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, V
 from crm.forms import CompanyForm, CompanyLocationAddForm, CompanyPhoneNumberAddForm
 from crm.models import Address, Company, CompanyLocation, CompanyPhoneNumber
 from crm.selectors import get_company_detail, get_company_list
+from projects.selectors import get_projects_for_company
 
 
 class CompanyListView(LoginRequiredMixin, ListView):
@@ -23,6 +24,11 @@ class CompanyDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return get_company_detail(self.kwargs["pk"])
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["company_projects"] = get_projects_for_company(self.object)
+        return ctx
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):

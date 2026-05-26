@@ -122,6 +122,36 @@
   {% endif %}
 </div>
 
+{# ── Projects ── #}
+<div style="margin-top:24px;background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <h2 style="margin:0;font-size:1rem;font-weight:600;color:#0f172a;">Projects ({{ company_projects.count }})</h2>
+    <a href="{% url 'projects:project_create' %}?company={{ company.pk }}" style="font-size:.8rem;color:#1d4ed8;text-decoration:none;font-weight:500;">+ Add Project</a>
+  </div>
+  {% if company_projects %}
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Title</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Contact</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in company_projects %}
+      <tr style="border-top:1px solid #f1f5f9;">
+        <td style="padding:10px 12px;"><a href="{% url 'projects:project_detail' project.pk %}" style="color:#1d4ed8;text-decoration:none;font-size:.875rem;">{{ project.title }}</a></td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ project.contact|default:"—" }}</td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ project.created_at|date:"d.m.Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#94a3b8;font-size:.875rem;margin:0;">No projects yet.</p>
+  {% endif %}
+</div>
+
 {# ── Danger zone ── #}
 <div style="margin-top:48px;padding:24px;border-radius:12px;border:1px solid #fecaca;background:#fff5f5;text-align:center;">
   <p style="margin:0 0 4px;font-size:.875rem;font-weight:600;color:#b91c1c;">Delete this company</p>
