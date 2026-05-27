@@ -103,4 +103,44 @@
   {% endwith %}
   {% endwith %}
 </div>
+
+<div style="margin-top:32px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <h2 style="margin:0;font-size:1.125rem;font-weight:600;color:#0f172a;">Documents</h2>
+    <a href="{% url 'documents:document_upload' %}?project={{ project.pk }}" style="background:#1d4ed8;color:#fff;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:.8rem;font-weight:500;">+ Upload Document</a>
+  </div>
+  {% with project_docs=project.documents.all %}
+  {% if project_docs %}
+  <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+    <thead>
+      <tr style="background:#f1f5f9;">
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">ID</th>
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Title</th>
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">File</th>
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Uploaded</th>
+        <th style="padding:10px 14px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in project_docs %}
+      {% if not doc.deleted_at %}
+      <tr style="border-top:1px solid #e2e8f0;">
+        <td style="padding:12px 14px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ doc.document_id|default:"—" }}</td>
+        <td style="padding:12px 14px;font-weight:500;color:#0f172a;">{{ doc.title }}</td>
+        <td style="padding:12px 14px;color:#64748b;font-size:.875rem;">{{ doc.original_filename|default:"—" }}</td>
+        <td style="padding:12px 14px;color:#64748b;font-size:.875rem;">{{ doc.created_at|date:"d.m.Y" }}</td>
+        <td style="padding:12px 14px;text-align:right;white-space:nowrap;">
+          <a href="{% url 'documents:document_detail' doc.pk %}" style="color:#64748b;font-size:.875rem;text-decoration:none;margin-right:10px;">View</a>
+          <a href="{% url 'documents:document_download' doc.pk %}" style="color:#1d4ed8;font-size:.875rem;text-decoration:none;">Download</a>
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#64748b;font-size:.875rem;">No documents yet. <a href="{% url 'documents:document_upload' %}?project={{ project.pk }}" style="color:#1d4ed8;">Upload the first one.</a></p>
+  {% endif %}
+  {% endwith %}
+</div>
 {% endblock %}

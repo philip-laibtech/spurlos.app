@@ -1,0 +1,84 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}{{ document.title }} – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+  <a href="{% url 'documents:document_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; Documents</a>
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{{ document.title }}</h1>
+  <div style="margin-left:auto;display:flex;gap:8px;">
+    <a href="{% url 'documents:document_download' document.pk %}" style="background:#1d4ed8;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Download</a>
+    <a href="{% url 'documents:document_delete' document.pk %}" style="background:#fef2f2;color:#ef4444;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Archive</a>
+  </div>
+</div>
+
+<div style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);max-width:640px;">
+  <dl style="display:grid;grid-template-columns:160px 1fr;gap:8px 16px;font-size:.875rem;">
+    <dt style="color:#64748b;font-weight:500;">Document ID</dt>
+    <dd style="margin:0;color:#64748b;font-family:monospace;">{{ document.document_id|default:"—" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Title</dt>
+    <dd style="margin:0;color:#0f172a;font-weight:500;">{{ document.title }}</dd>
+
+    {% if document.description %}
+    <dt style="color:#64748b;font-weight:500;">Description</dt>
+    <dd style="margin:0;color:#0f172a;white-space:pre-wrap;">{{ document.description }}</dd>
+    {% endif %}
+
+    <dt style="color:#64748b;font-weight:500;">Filename</dt>
+    <dd style="margin:0;color:#0f172a;">{{ document.original_filename|default:"—" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">File Size</dt>
+    <dd style="margin:0;color:#0f172a;">
+      {% if document.file_size %}{{ document.file_size|filesizeformat }}{% else %}—{% endif %}
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Type</dt>
+    <dd style="margin:0;color:#0f172a;">{{ document.mime_type|default:"—" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Company</dt>
+    <dd style="margin:0;">
+      {% if document.company %}
+        <a href="{% url 'crm:company_detail' document.company.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ document.company.name }}</a>
+      {% else %}—{% endif %}
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Contact</dt>
+    <dd style="margin:0;">
+      {% if document.contact %}
+        <a href="{% url 'crm:contact_detail' document.contact.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ document.contact }}</a>
+      {% else %}—{% endif %}
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Project</dt>
+    <dd style="margin:0;">
+      {% if document.project %}
+        <a href="{% url 'projects:project_detail' document.project.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ document.project.title }}</a>
+      {% else %}—{% endif %}
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Task</dt>
+    <dd style="margin:0;">
+      {% if document.task %}
+        <a href="{% url 'tasks:task_detail' document.task.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ document.task }}</a>
+      {% else %}—{% endif %}
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Uploaded By</dt>
+    <dd style="margin:0;color:#0f172a;">
+      {% if document.uploaded_by %}
+        {% if document.uploaded_by.first_name or document.uploaded_by.last_name %}
+          {{ document.uploaded_by.first_name }} {{ document.uploaded_by.last_name }}
+        {% else %}
+          {{ document.uploaded_by.email }}
+        {% endif %}
+      {% else %}—{% endif %}
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Uploaded</dt>
+    <dd style="margin:0;color:#64748b;">{{ document.created_at|date:"d.m.Y H:i" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Updated</dt>
+    <dd style="margin:0;color:#64748b;">{{ document.updated_at|date:"d.m.Y H:i" }}</dd>
+  </dl>
+</div>
+{% endblock %}

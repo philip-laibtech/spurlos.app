@@ -152,6 +152,44 @@
   {% endif %}
 </div>
 
+{# ── Documents ── #}
+<div style="margin-top:24px;background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <h2 style="margin:0;font-size:1rem;font-weight:600;color:#0f172a;">Documents</h2>
+    <a href="{% url 'documents:document_upload' %}?company={{ company.pk }}" style="font-size:.8rem;color:#1d4ed8;text-decoration:none;font-weight:500;">+ Upload Document</a>
+  </div>
+  {% with company_docs=company.documents.all %}
+  {% if company_docs %}
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">ID</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Title</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">File</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Uploaded</th>
+        <th style="padding:8px 12px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in company_docs %}
+      {% if not doc.deleted_at %}
+      <tr style="border-top:1px solid #f1f5f9;">
+        <td style="padding:10px 12px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ doc.document_id|default:"—" }}</td>
+        <td style="padding:10px 12px;font-size:.875rem;"><a href="{% url 'documents:document_detail' doc.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ doc.title }}</a></td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ doc.original_filename|default:"—" }}</td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ doc.created_at|date:"d.m.Y" }}</td>
+        <td style="padding:10px 12px;text-align:right;"><a href="{% url 'documents:document_download' doc.pk %}" style="color:#1d4ed8;font-size:.875rem;text-decoration:none;">Download</a></td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#94a3b8;font-size:.875rem;margin:0;">No documents yet.</p>
+  {% endif %}
+  {% endwith %}
+</div>
+
 {# ── Danger zone ── #}
 <div style="margin-top:48px;padding:24px;border-radius:12px;border:1px solid #fecaca;background:#fff5f5;text-align:center;">
   <p style="margin:0 0 4px;font-size:.875rem;font-weight:600;color:#b91c1c;">Delete this company</p>

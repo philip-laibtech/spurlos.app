@@ -1,0 +1,58 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}Documents – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">Documents</h1>
+  <a href="{% url 'documents:document_upload' %}" style="background:#1d4ed8;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">+ Upload Document</a>
+</div>
+
+<form method="get" style="margin-bottom:20px;">
+  <div style="display:flex;gap:8px;max-width:400px;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search documents…" style="flex:1;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;color:#0f172a;outline:none;">
+    <button type="submit" style="background:#f1f5f9;color:#374151;padding:8px 16px;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;cursor:pointer;">Search</button>
+    {% if query %}<a href="{% url 'documents:document_list' %}" style="padding:8px 12px;font-size:.875rem;color:#64748b;text-decoration:none;align-self:center;">Clear</a>{% endif %}
+  </div>
+</form>
+
+{% if documents %}
+<table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+  <thead>
+    <tr style="background:#f1f5f9;">
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">ID</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Title</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">File</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Linked To</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Size</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Uploaded</th>
+      <th style="padding:12px 16px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for doc in documents %}
+    <tr onclick="window.location='{% url 'documents:document_detail' doc.pk %}'" style="border-top:1px solid #e2e8f0;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+      <td style="padding:14px 16px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ doc.document_id|default:"—" }}</td>
+      <td style="padding:14px 16px;font-weight:500;color:#0f172a;">{{ doc.title }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ doc.original_filename|default:"—" }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">
+        {% if doc.company %}{{ doc.company.name }}{% endif %}
+        {% if doc.contact %}{% if doc.company %} · {% endif %}{{ doc.contact }}{% endif %}
+        {% if doc.project %}{% if doc.company or doc.contact %} · {% endif %}{{ doc.project.title }}{% endif %}
+        {% if doc.task %}{% if doc.company or doc.contact or doc.project %} · {% endif %}{{ doc.task.title }}{% endif %}
+      </td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">
+        {% if doc.file_size %}{{ doc.file_size|filesizeformat }}{% else %}—{% endif %}
+      </td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ doc.created_at|date:"d.m.Y" }}</td>
+      <td style="padding:14px 16px;text-align:right;white-space:nowrap;" onclick="event.stopPropagation()">
+        <a href="{% url 'documents:document_detail' doc.pk %}" style="color:#64748b;font-size:.875rem;text-decoration:none;margin-right:12px;">View</a>
+        <a href="{% url 'documents:document_download' doc.pk %}" style="color:#1d4ed8;font-size:.875rem;text-decoration:none;">Download</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:#64748b;">No documents found. <a href="{% url 'documents:document_upload' %}">Upload the first one.</a></p>
+{% endif %}
+{% endblock %}
