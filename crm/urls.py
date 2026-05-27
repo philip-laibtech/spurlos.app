@@ -16,8 +16,12 @@ from crm.views import (
     ContactDeleteView,
     ContactDetailView,
     ContactEmailCreateView,
+    ContactEmailDeleteView,
+    ContactEmailUpdateView,
     ContactListView,
     ContactPhoneCreateView,
+    ContactPhoneDeleteView,
+    ContactPhoneUpdateView,
     ContactUpdateView,
 )
 
@@ -48,7 +52,13 @@ urlpatterns = [
     path("contacts/<int:pk>/edit/", ContactUpdateView.as_view(), name="contact_update"),
     path("contacts/<int:pk>/delete/", ContactDeleteView.as_view(), name="contact_delete"),
 
-    # Contact email / phone
+    # Contact email addresses
     path("contacts/<int:contact_pk>/add-email/", ContactEmailCreateView.as_view(), name="contact_email_create"),
+    path("contacts/<int:contact_pk>/emails/<int:pk>/edit/", ContactEmailUpdateView.as_view(), name="contact_email_update"),
+    path("contacts/<int:contact_pk>/emails/<int:pk>/delete/", ContactEmailDeleteView.as_view(), name="contact_email_delete"),
+
+    # Contact phone numbers
     path("contacts/<int:contact_pk>/add-phone/", ContactPhoneCreateView.as_view(), name="contact_phone_create"),
+    path("contacts/<int:contact_pk>/phones/<int:pk>/edit/", ContactPhoneUpdateView.as_view(), name="contact_phone_update"),
+    path("contacts/<int:contact_pk>/phones/<int:pk>/delete/", ContactPhoneDeleteView.as_view(), name="contact_phone_delete"),
 ]

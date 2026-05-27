@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, View
 
 from crm.forms import ContactEmailAddressAddForm, ContactForm, ContactPhoneNumberAddForm
-from crm.models import Contact
+from crm.models import Contact, ContactEmailAddress, ContactPhoneNumber
 from crm.selectors import get_contact_detail, get_contact_list
 from projects.selectors import get_projects_for_contact
 
@@ -121,3 +121,67 @@ class ContactPhoneCreateView(LoginRequiredMixin, View):
         return render(request, "crm/contacts/phone_form.html", {
             "form": form, "contact": contact, "title": "Add Phone Number",
         })
+
+
+class ContactEmailUpdateView(LoginRequiredMixin, View):
+    def _get_objects(self, contact_pk, pk):
+        contact = get_object_or_404(Contact, pk=contact_pk, deleted_at__isnull=True)
+        email = get_object_or_404(ContactEmailAddress, pk=pk, contact=contact)
+        return contact, email
+
+    def get(self, request, contact_pk, pk):
+        contact, email = self._get_objects(contact_pk, pk)
+        form = ContactEmailAddressAddForm(instance=email)
+        return render(request, "crm/contacts/email_form.html", {
+            "form": form, "contact": contact, "email": email, "title": f"Edit {email.email}",
+        })
+
+    def post(self, request, contact_pk, pk):
+        contact, email = self._get_objects(contact_pk, pk)
+        form = ContactEmailAddressAddForm(request.POST, instance=email)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("crm:contact_detail", kwargs={"pk": contact.pk}))
+        return render(request, "crm/contacts/email_form.html", {
+            "form": form, "contact": contact, "email": email, "title": f"Edit {email.email}",
+        })
+
+
+class ContactEmailDeleteView(LoginRequiredMixin, View):
+    def post(self, request, contact_pk, pk):
+        contact = get_object_or_404(Contact, pk=contact_pk, deleted_at__isnull=True)
+        email = get_object_or_404(ContactEmailAddress, pk=pk, contact=contact)
+        email.delete()
+        return redirect(reverse("crm:contact_detail", kwargs={"pk": contact.pk}))
+
+
+class ContactPhoneUpdateView(LoginRequiredMixin, View):
+    def _get_objects(self, contact_pk, pk):
+        contact = get_object_or_404(Contact, pk=contact_pk, deleted_at__isnull=True)
+        phone = get_object_or_404(ContactPhoneNumber, pk=pk, contact=contact)
+        return contact, phone
+
+    def get(self, request, contact_pk, pk):
+        contact, phone = self._get_objects(contact_pk, pk)
+        form = ContactPhoneNumberAddForm(instance=phone)
+        return render(request, "crm/contacts/phone_form.html", {
+            "form": form, "contact": contact, "phone": phone, "title": f"Edit {phone.phone_number}",
+        })
+
+    def post(self, request, contact_pk, pk):
+        contact, phone = self._get_objects(contact_pk, pk)
+        form = ContactPhoneNumberAddForm(request.POST, instance=phone)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("crm:contact_detail", kwargs={"pk": contact.pk}))
+        return render(request, "crm/contacts/phone_form.html", {
+            "form": form, "contact": contact, "phone": phone, "title": f"Edit {phone.phone_number}",
+        })
+
+
+class ContactPhoneDeleteView(LoginRequiredMixin, View):
+    def post(self, request, contact_pk, pk):
+        contact = get_object_or_404(Contact, pk=contact_pk, deleted_at__isnull=True)
+        phone = get_object_or_404(ContactPhoneNumber, pk=pk, contact=contact)
+        phone.delete()
+        return redirect(reverse("crm:contact_detail", kwargs={"pk": contact.pk}))
