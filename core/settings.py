@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'dashboard',
     'crm',
     'projects',
+    'tasks',
 ]
 
 LOGIN_URL = '/accounts/login/'

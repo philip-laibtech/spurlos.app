@@ -1,0 +1,53 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}{{ task.title }} – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+  <a href="{% url 'tasks:task_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; Tasks</a>
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{{ task.title }}</h1>
+  <div style="margin-left:auto;display:flex;gap:8px;">
+    <a href="{% url 'tasks:task_update' task.pk %}" style="background:#f1f5f9;color:#0f172a;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Edit</a>
+    <a href="{% url 'tasks:task_delete' task.pk %}" style="background:#fef2f2;color:#ef4444;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Archive</a>
+  </div>
+</div>
+
+<div style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);max-width:600px;">
+  <dl style="display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:.875rem;">
+    <dt style="color:#64748b;font-weight:500;">Task ID</dt>
+    <dd style="margin:0;color:#64748b;font-family:monospace;">{{ task.task_id|default:"—" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Title</dt>
+    <dd style="margin:0;color:#0f172a;font-weight:500;">{{ task.title }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Project</dt>
+    <dd style="margin:0;">
+      <a href="{% url 'projects:project_detail' task.project.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ task.project.title }}</a>
+    </dd>
+
+    <dt style="color:#64748b;font-weight:500;">Assigned To</dt>
+    <dd style="margin:0;color:#0f172a;">
+      {% if task.assigned_user %}
+        {% if task.assigned_user.first_name or task.assigned_user.last_name %}
+          {{ task.assigned_user.first_name }} {{ task.assigned_user.last_name }}
+        {% else %}
+          {{ task.assigned_user.email }}
+        {% endif %}
+      {% else %}—{% endif %}
+    </dd>
+
+    {% if task.description %}
+    <dt style="color:#64748b;font-weight:500;">Description</dt>
+    <dd style="margin:0;color:#0f172a;white-space:pre-wrap;">{{ task.description }}</dd>
+    {% endif %}
+
+    <dt style="color:#64748b;font-weight:500;">Due Date</dt>
+    <dd style="margin:0;color:#0f172a;">{{ task.due_date|date:"d.m.Y"|default:"—" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Created</dt>
+    <dd style="margin:0;color:#64748b;">{{ task.created_at|date:"d.m.Y H:i" }}</dd>
+
+    <dt style="color:#64748b;font-weight:500;">Updated</dt>
+    <dd style="margin:0;color:#64748b;">{{ task.updated_at|date:"d.m.Y H:i" }}</dd>
+  </dl>
+</div>
+{% endblock %}

@@ -54,4 +54,53 @@
     <dd style="margin:0;color:#64748b;">{{ project.updated_at|date:"d.m.Y H:i" }}</dd>
   </dl>
 </div>
+
+<div style="margin-top:32px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <h2 style="margin:0;font-size:1.125rem;font-weight:600;color:#0f172a;">Tasks</h2>
+    <a href="{% url 'tasks:task_create' %}?project={{ project.pk }}" style="background:#1d4ed8;color:#fff;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:.8rem;font-weight:500;">+ Add Task</a>
+  </div>
+  {% with tasks=project.tasks.filter %}
+  {% with project_tasks=project.tasks.all %}
+  {% if project_tasks %}
+  <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+    <thead>
+      <tr style="background:#f1f5f9;">
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">ID</th>
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Title</th>
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Assigned To</th>
+        <th style="text-align:left;padding:10px 14px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Due Date</th>
+        <th style="padding:10px 14px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in project_tasks %}
+      {% if not task.deleted_at %}
+      <tr onclick="window.location='{% url 'tasks:task_detail' task.pk %}'" style="border-top:1px solid #e2e8f0;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+        <td style="padding:12px 14px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ task.task_id|default:"—" }}</td>
+        <td style="padding:12px 14px;font-weight:500;color:#0f172a;">{{ task.title }}</td>
+        <td style="padding:12px 14px;color:#64748b;font-size:.875rem;">
+          {% if task.assigned_user %}
+            {% if task.assigned_user.first_name or task.assigned_user.last_name %}
+              {{ task.assigned_user.first_name }} {{ task.assigned_user.last_name }}
+            {% else %}
+              {{ task.assigned_user.email }}
+            {% endif %}
+          {% else %}—{% endif %}
+        </td>
+        <td style="padding:12px 14px;color:#64748b;font-size:.875rem;">{{ task.due_date|date:"d.m.Y"|default:"—" }}</td>
+        <td style="padding:12px 14px;text-align:right;" onclick="event.stopPropagation()">
+          <a href="{% url 'tasks:task_detail' task.pk %}" style="color:#64748b;font-size:.875rem;text-decoration:none;">View</a>
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#64748b;font-size:.875rem;">No tasks yet. <a href="{% url 'tasks:task_create' %}?project={{ project.pk }}" style="color:#1d4ed8;">Add the first task.</a></p>
+  {% endif %}
+  {% endwith %}
+  {% endwith %}
+</div>
 {% endblock %}
