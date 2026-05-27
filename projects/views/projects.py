@@ -48,6 +48,9 @@ class ProjectCreateView(LoginRequiredMixin, View):
                 company=d["company"],
                 title=d["title"],
                 contact=d.get("contact"),
+                assigned_to=d.get("assigned_to"),
+                description=d.get("description", ""),
+                status=d.get("status", ""),
             )
             return redirect(reverse("projects:project_detail", kwargs={"pk": project.pk}))
         return render(request, self.template_name, {"form": form})

@@ -14,8 +14,22 @@ def _document_upload_path(instance, filename):
 
 
 class Document(models.Model):
+    class Category(models.TextChoices):
+        CONTRACT = "contract", "Contract"
+        CERTIFICATE = "certificate", "Certificate"
+        INVOICE = "invoice", "Invoice"
+        PHOTO = "photo", "Photo"
+        CUSTOMER_FILE = "customer_file", "Customer File"
+        INTERNAL = "internal", "Internal"
+        OTHER = "other", "Other"
+
     document_id = models.CharField(max_length=50, unique=True, blank=True, db_index=True)
     title = models.CharField(max_length=255)
+    category = models.CharField(
+        max_length=50,
+        choices=Category.choices,
+        blank=True,
+    )
     description = models.TextField(blank=True)
     file = models.FileField(upload_to=_document_upload_path)
     original_filename = models.CharField(max_length=255, blank=True)
@@ -67,6 +81,7 @@ class Document(models.Model):
         indexes = [
             models.Index(fields=["document_id"]),
             models.Index(fields=["title"]),
+            models.Index(fields=["category"]),
             models.Index(fields=["company"]),
             models.Index(fields=["contact"]),
             models.Index(fields=["project"]),

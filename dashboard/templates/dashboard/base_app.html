@@ -172,6 +172,168 @@
 
     /* ── Page content ── */
     .page-content { padding: 32px; flex: 1; }
+
+    /* ═══════════════════════════════════════════
+       Form design system
+    ═══════════════════════════════════════════ */
+
+    /* Page header */
+    .fh { margin-bottom: 32px; }
+    .fh-back {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .8125rem; color: #64748b; text-decoration: none;
+      margin-bottom: 10px; transition: color .15s;
+    }
+    .fh-back:hover { color: #1d4ed8; }
+    .fh-title {
+      margin: 0; font-size: 1.625rem; font-weight: 700;
+      color: #0f172a; letter-spacing: -.025em; line-height: 1.2;
+    }
+
+    /* Card */
+    .fc {
+      background: #fff; border-radius: 14px;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05), 0 6px 20px rgba(0,0,0,.04);
+      margin-bottom: 16px; overflow: hidden;
+    }
+    .fc-head { padding: 18px 28px 14px; border-bottom: 1px solid #f1f5f9; }
+    .fc-title {
+      margin: 0; font-size: .6875rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: #94a3b8;
+    }
+    .fc-body { padding: 28px; }
+
+    /* Grid layouts */
+    .fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
+    .fg1 { display: flex; flex-direction: column; gap: 20px; }
+    .fg-full { grid-column: 1 / -1; }
+
+    /* Field wrapper */
+    .ff { display: flex; flex-direction: column; gap: 5px; }
+
+    /* Label */
+    .fl {
+      font-size: .8125rem; font-weight: 600; color: #374151;
+      display: flex; align-items: center; gap: 4px; line-height: 1.4;
+    }
+    .fl .req { color: #ef4444; font-size: .6875rem; font-weight: 700; }
+
+    /* Label row with inline action link */
+    .fl-row { display: flex; align-items: baseline; justify-content: space-between; }
+    .fl-link {
+      font-size: .75rem; color: #1d4ed8; text-decoration: none; font-weight: 500;
+      transition: color .15s;
+    }
+    .fl-link:hover { color: #1e40af; text-decoration: underline; }
+
+    /* Hint text */
+    .fhint { margin: 0; font-size: .75rem; color: #94a3b8; line-height: 1.4; }
+
+    /* Field error list */
+    .ferrs { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+    .ferrs li {
+      font-size: .75rem; color: #dc2626;
+      display: flex; align-items: center; gap: 5px; line-height: 1.4;
+    }
+    .ferrs li::before {
+      content: ''; width: 3px; height: 3px;
+      border-radius: 50%; background: #dc2626; flex-shrink: 0;
+    }
+
+    /* Checkbox row */
+    .fcheck { display: flex; align-items: center; gap: 10px; }
+    .fcheck label { font-size: .875rem; font-weight: 500; color: #374151; cursor: pointer; }
+
+    /* Non-field errors banner */
+    .fnfe {
+      margin-bottom: 20px; padding: 12px 16px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-left: 3px solid #ef4444; border-radius: 10px;
+    }
+    .fnfe ul { margin: 0; padding: 0; list-style: none; }
+    .fnfe li { font-size: .875rem; color: #dc2626; }
+
+    /* ── Input / select / textarea styles (scoped to .fi wrapper) ── */
+    .fi input[type="text"],
+    .fi input[type="email"],
+    .fi input[type="url"],
+    .fi input[type="tel"],
+    .fi input[type="number"],
+    .fi input[type="date"],
+    .fi input[type="password"],
+    .fi textarea,
+    .fi select {
+      width: 100%; padding: 10px 14px;
+      font-size: .875rem; color: #111827;
+      background: #fff; border: 1.5px solid #e2e8f0;
+      border-radius: 8px; outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      font-family: inherit; line-height: 1.5;
+      -webkit-appearance: none; appearance: none;
+      box-sizing: border-box;
+    }
+    .fi input:focus,
+    .fi textarea:focus,
+    .fi select:focus {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29,78,216,.1);
+    }
+    .ff.has-err input,
+    .ff.has-err textarea,
+    .ff.has-err select { border-color: #ef4444; }
+    .ff.has-err input:focus,
+    .ff.has-err textarea:focus,
+    .ff.has-err select:focus { box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+    .fi textarea { resize: vertical; min-height: 96px; }
+    .fi select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      padding-right: 36px; cursor: pointer;
+    }
+    .fi input[type="checkbox"] {
+      width: 17px; height: 17px; border: 1.5px solid #cbd5e1;
+      border-radius: 4px; accent-color: #1d4ed8;
+      cursor: pointer; padding: 0; flex-shrink: 0; margin: 0;
+    }
+    .fi input[type="file"] {
+      width: 100%; padding: 10px 14px; font-size: .875rem; color: #374151;
+      background: #f8fafc; border: 1.5px dashed #cbd5e1;
+      border-radius: 8px; cursor: pointer;
+      font-family: inherit; box-sizing: border-box;
+      transition: border-color .15s, background .15s;
+    }
+    .fi input[type="file"]:hover { border-color: #94a3b8; background: #f1f5f9; }
+
+    /* Form actions row */
+    .fa { display: flex; align-items: center; gap: 10px; padding-top: 4px; }
+
+    /* Primary button */
+    .btn-p {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: #1d4ed8; color: #fff; padding: 10px 24px;
+      border: none; border-radius: 8px; font-size: .875rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: background .15s, box-shadow .15s, transform .1s;
+      font-family: inherit; line-height: 1;
+    }
+    .btn-p:hover {
+      background: #1e40af;
+      box-shadow: 0 4px 14px rgba(29,78,216,.28);
+      transform: translateY(-1px);
+    }
+    .btn-p:active { transform: translateY(0); }
+
+    /* Secondary / cancel button */
+    .btn-s {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent; color: #64748b; padding: 10px 20px;
+      border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: .875rem; font-weight: 500; cursor: pointer; text-decoration: none;
+      transition: background .15s, border-color .15s, color .15s;
+      font-family: inherit; line-height: 1;
+    }
+    .btn-s:hover { background: #f8fafc; border-color: #cbd5e1; color: #374151; }
   </style>
 </head>
 <body>

@@ -40,3 +40,15 @@ class ProjectModelTests(TestCase):
     def test_contact_can_be_blank(self):
         project = Project(title="No Contact", company=self.company)
         project.full_clean()  # should not raise
+
+    def test_str_with_project_number(self):
+        project = Project(title="Alpha", company=self.company, project_number="SL202600001")
+        self.assertEqual(str(project), "SL202600001 - Alpha")
+
+    def test_str_without_project_number(self):
+        project = Project(title="Alpha", company=self.company)
+        self.assertEqual(str(project), "Alpha")
+
+    def test_default_status_is_planned(self):
+        project = Project(title="New", company=self.company)
+        self.assertEqual(project.status, Project.Status.PLANNED)

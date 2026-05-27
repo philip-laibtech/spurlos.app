@@ -11,8 +11,11 @@ class CompanyForm(forms.ModelForm):
             "legal_name",
             "company_type",
             "status",
+            "domain",
             "website",
             "main_email",
+            "uid_number",
+            "vat_number",
             "industry",
             "notes",
         )

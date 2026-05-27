@@ -22,7 +22,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ("title", "company", "contact", "assigned_to", "description")
+        fields = ("title", "status", "company", "contact", "assigned_to", "description")
 
     def clean(self):
         cleaned_data = super().clean()

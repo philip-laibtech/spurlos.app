@@ -4,6 +4,18 @@ from django.db import models
 
 
 class Task(models.Model):
+    class Status(models.TextChoices):
+        OPEN = "open", "Open"
+        IN_PROGRESS = "in_progress", "In Progress"
+        DONE = "done", "Done"
+        CANCELLED = "cancelled", "Cancelled"
+
+    class Priority(models.TextChoices):
+        LOW = "low", "Low"
+        NORMAL = "normal", "Normal"
+        HIGH = "high", "High"
+        URGENT = "urgent", "Urgent"
+
     task_id = models.CharField(max_length=50, unique=True, blank=True, db_index=True)
     project = models.ForeignKey(
         "projects.Project",
@@ -18,6 +30,16 @@ class Task(models.Model):
         related_name="assigned_tasks",
     )
     title = models.CharField(max_length=255)
+    status = models.CharField(
+        max_length=50,
+        choices=Status.choices,
+        default=Status.OPEN,
+    )
+    priority = models.CharField(
+        max_length=50,
+        choices=Priority.choices,
+        default=Priority.NORMAL,
+    )
     description = models.TextField(blank=True)
     due_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -30,6 +52,8 @@ class Task(models.Model):
             models.Index(fields=["task_id"]),
             models.Index(fields=["project"]),
             models.Index(fields=["assigned_user"]),
+            models.Index(fields=["status"]),
+            models.Index(fields=["priority"]),
             models.Index(fields=["due_date"]),
             models.Index(fields=["deleted_at"]),
             models.Index(fields=["created_at"]),

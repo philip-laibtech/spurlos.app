@@ -31,6 +31,8 @@ def create_task(
     description: str = "",
     due_date=None,
     task_id: str = "",
+    status: str = "",
+    priority: str = "",
 ) -> Task:
     if not task_id:
         task_id = generate_task_id(project)
@@ -41,13 +43,15 @@ def create_task(
         assigned_user=assigned_user,
         description=description,
         due_date=due_date,
+        status=status or Task.Status.OPEN,
+        priority=priority or Task.Priority.NORMAL,
     )
     task.full_clean()
     task.save()
     return task
 
 
-ALLOWED_UPDATE_FIELDS = {"assigned_user", "title", "description", "due_date"}
+ALLOWED_UPDATE_FIELDS = {"assigned_user", "title", "description", "due_date", "status", "priority"}
 
 
 def update_task(task: Task, **data) -> Task:

@@ -1,7 +1,17 @@
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 
-from crm.models import Contact, ContactEmailAddress, ContactPhoneNumber
+from crm.models import Address, Company, CompanyLocation, Contact, ContactEmailAddress, ContactPhoneNumber
+
+
+def _make_company(name="Acme AG"):
+    return Company.objects.create(name=name)
+
+
+def _make_location(company, name="Main Office"):
+    address = Address.objects.create(line1="Teststrasse 1", postal_code="8000", city="Zürich")
+    return CompanyLocation.objects.create(company=company, address=address, name=name)
 
 
 class ContactStrTest(TestCase):
@@ -41,3 +51,33 @@ class ContactPhoneConstraintTest(TestCase):
         ContactPhoneNumber.objects.create(contact=contact, phone_number="+41 79 000 0000", is_primary=True)
         with self.assertRaises(IntegrityError):
             ContactPhoneNumber.objects.create(contact=contact, phone_number="+41 79 000 0001", is_primary=True)
+
+
+class ContactWorkLocationTest(TestCase):
+    def test_work_location_must_belong_to_same_company(self):
+        company_a = _make_company("Company A")
+        company_b = _make_company("Company B")
+        location_b = _make_location(company_b, "B Office")
+        contact = Contact(first_name="Max", last_name="Muster", company=company_a, work_location=location_b)
+        with self.assertRaises(ValidationError):
+            contact.full_clean()
+
+    def test_work_location_from_same_company_is_valid(self):
+        company = _make_company()
+        location = _make_location(company)
+        contact = Contact(first_name="Max", last_name="Muster", company=company, work_location=location)
+        contact.full_clean()  # should not raise
+
+    def test_work_location_without_company_is_valid(self):
+        company = _make_company()
+        location = _make_location(company)
+        contact = Contact(first_name="Max", last_name="Muster", work_location=location)
+        contact.full_clean()  # no company set, no cross-check needed
+
+    def test_linkedin_url_stored(self):
+        contact = Contact.objects.create(
+            first_name="Max", last_name="Muster",
+            linkedin_url="https://linkedin.com/in/max-muster"
+        )
+        contact.refresh_from_db()
+        self.assertEqual(contact.linkedin_url, "https://linkedin.com/in/max-muster")

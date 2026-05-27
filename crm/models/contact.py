@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -47,6 +48,14 @@ class Contact(models.Model):
         choices=Status.choices,
         default=Status.ACTIVE,
     )
+    work_location = models.ForeignKey(
+        "crm.CompanyLocation",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="contacts",
+    )
+    linkedin_url = models.URLField(blank=True)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -57,7 +66,15 @@ class Contact(models.Model):
             models.Index(fields=["last_name", "first_name"]),
             models.Index(fields=["company"]),
             models.Index(fields=["status"]),
+            models.Index(fields=["work_location"]),
         ]
+
+    def clean(self):
+        if self.work_location_id and self.company_id:
+            if self.work_location.company_id != self.company_id:
+                raise ValidationError(
+                    "The selected work location does not belong to the selected company."
+                )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

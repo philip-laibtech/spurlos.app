@@ -2,43 +2,39 @@
 {% block title %}{% if object %}Edit {{ object.title }}{% else %}Add Project{% endif %} – spurlos{% endblock %}
 
 {% block content %}
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-  <a href="{% if object %}{% url 'projects:project_detail' object.pk %}{% else %}{% url 'projects:project_list' %}{% endif %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; {% if object %}{{ object.title }}{% else %}Projects{% endif %}</a>
-  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{% if object %}Edit {{ object.title }}{% else %}Add Project{% endif %}</h1>
+<div class="fh">
+  <a href="{% if object %}{% url 'projects:project_detail' object.pk %}{% else %}{% url 'projects:project_list' %}{% endif %}" class="fh-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    {% if object %}{{ object.title }}{% else %}Projects{% endif %}
+  </a>
+  <h1 class="fh-title">{% if object %}Edit {{ object.title }}{% else %}Add Project{% endif %}</h1>
 </div>
 
-<form method="post" novalidate style="max-width:600px;">
+<form method="post" novalidate class="fi" style="max-width:560px;">
   {% csrf_token %}
 
-  <div style="background:#fff;padding:32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:24px;">
-    <div style="display:flex;flex-direction:column;gap:20px;">
-      {% if form.non_field_errors %}
-      <ul style="margin:0;padding-left:16px;color:#ef4444;font-size:.875rem;">
-        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-      </ul>
-      {% endif %}
+  {% if form.non_field_errors %}
+  <div class="fnfe"><ul>{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
+  {% endif %}
+
+  <div class="fc">
+    <div class="fc-body fg1">
       {% for field in form %}
-      <div>
-        <label style="display:block;font-size:.875rem;font-weight:500;color:#374151;margin-bottom:6px;" for="{{ field.id_for_label }}">
-          {{ field.label }}{% if field.field.required %} *{% endif %}
+      <div class="ff {% if field.errors %}has-err{% endif %}">
+        <label class="fl" for="{{ field.id_for_label }}">
+          {{ field.label }}{% if field.field.required %}<span class="req">*</span>{% endif %}
         </label>
         {{ field }}
-        {% if field.help_text %}
-        <p style="margin:4px 0 0;font-size:.75rem;color:#94a3b8;">{{ field.help_text }}</p>
-        {% endif %}
-        {% if field.errors %}
-        <ul style="margin:4px 0 0;padding-left:16px;color:#ef4444;font-size:.8rem;">
-          {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
-        </ul>
-        {% endif %}
+        {% if field.help_text %}<p class="fhint">{{ field.help_text }}</p>{% endif %}
+        {% if field.errors %}<ul class="ferrs">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
       </div>
       {% endfor %}
     </div>
   </div>
 
-  <div style="display:flex;gap:12px;">
-    <button type="submit" style="background:#1d4ed8;color:#fff;padding:10px 24px;border:none;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;">Save</button>
-    <a href="{% if object %}{% url 'projects:project_detail' object.pk %}{% else %}{% url 'projects:project_list' %}{% endif %}" style="padding:10px 20px;border-radius:8px;font-size:.875rem;color:#64748b;text-decoration:none;background:#f1f5f9;">Cancel</a>
+  <div class="fa">
+    <button type="submit" class="btn-p">Save</button>
+    <a href="{% if object %}{% url 'projects:project_detail' object.pk %}{% else %}{% url 'projects:project_list' %}{% endif %}" class="btn-s">Cancel</a>
   </div>
 </form>
 {% endblock %}

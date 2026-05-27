@@ -7,7 +7,7 @@ from documents.services.documents import ALLOWED_DOCUMENT_EXTENSIONS, MAX_DOCUME
 class DocumentUploadForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ("title", "description", "file", "company", "contact", "project", "task")
+        fields = ("title", "category", "description", "file", "company", "contact", "project", "task")
 
     def clean_file(self):
         uploaded_file = self.cleaned_data.get("file")

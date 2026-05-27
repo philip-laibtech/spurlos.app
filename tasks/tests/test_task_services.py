@@ -75,3 +75,31 @@ class TaskServiceTests(TestCase):
         restore_task(task)
         task.refresh_from_db()
         self.assertIsNone(task.deleted_at)
+
+    def test_create_task_default_status_is_open(self):
+        from tasks.models import Task
+        task = create_task(project=self.project, title="Status default")
+        self.assertEqual(task.status, Task.Status.OPEN)
+
+    def test_create_task_default_priority_is_normal(self):
+        from tasks.models import Task
+        task = create_task(project=self.project, title="Priority default")
+        self.assertEqual(task.priority, Task.Priority.NORMAL)
+
+    def test_create_task_with_explicit_status_and_priority(self):
+        from tasks.models import Task
+        task = create_task(
+            project=self.project,
+            title="Explicit",
+            status=Task.Status.IN_PROGRESS,
+            priority=Task.Priority.HIGH,
+        )
+        self.assertEqual(task.status, Task.Status.IN_PROGRESS)
+        self.assertEqual(task.priority, Task.Priority.HIGH)
+
+    def test_update_task_status_and_priority(self):
+        from tasks.models import Task
+        task = create_task(project=self.project, title="To update")
+        updated = update_task(task, status=Task.Status.DONE, priority=Task.Priority.URGENT)
+        self.assertEqual(updated.status, Task.Status.DONE)
+        self.assertEqual(updated.priority, Task.Priority.URGENT)

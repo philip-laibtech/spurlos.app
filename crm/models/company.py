@@ -29,6 +29,9 @@ class Company(models.Model):
         choices=Status.choices,
         default=Status.ACTIVE,
     )
+    domain = models.CharField(max_length=255, blank=True)
+    uid_number = models.CharField(max_length=50, blank=True)
+    vat_number = models.CharField(max_length=50, blank=True)
     main_email = models.EmailField(blank=True)
     notes = models.TextField(blank=True)
     hq_location = models.ForeignKey(
@@ -48,6 +51,7 @@ class Company(models.Model):
             models.Index(fields=["name"]),
             models.Index(fields=["status"]),
             models.Index(fields=["company_type"]),
+            models.Index(fields=["domain"]),
         ]
 
     def __str__(self):

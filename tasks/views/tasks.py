@@ -54,6 +54,8 @@ class TaskCreateView(LoginRequiredMixin, View):
                 assigned_user=d.get("assigned_user"),
                 description=d.get("description", ""),
                 due_date=d.get("due_date"),
+                status=d.get("status", ""),
+                priority=d.get("priority", ""),
             )
             return redirect(reverse("tasks:task_detail", kwargs={"pk": task.pk}))
         return render(request, self.template_name, {"form": form})

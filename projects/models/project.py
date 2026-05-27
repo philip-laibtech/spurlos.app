@@ -3,7 +3,27 @@ from django.db import models
 
 
 class Project(models.Model):
+    class Status(models.TextChoices):
+        PLANNED = "planned", "Planned"
+        ACTIVE = "active", "Active"
+        ON_HOLD = "on_hold", "On Hold"
+        COMPLETED = "completed", "Completed"
+        CANCELLED = "cancelled", "Cancelled"
+        ARCHIVED = "archived", "Archived"
+
+    project_number = models.CharField(
+        max_length=50,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
     title = models.CharField(max_length=255)
+    status = models.CharField(
+        max_length=50,
+        choices=Status.choices,
+        default=Status.PLANNED,
+    )
     company = models.ForeignKey(
         "crm.Company",
         on_delete=models.PROTECT,
@@ -31,18 +51,18 @@ class Project(models.Model):
     class Meta:
         ordering = ["-created_at"]
         indexes = [
+            models.Index(fields=["project_number"]),
             models.Index(fields=["title"]),
+            models.Index(fields=["status"]),
             models.Index(fields=["company"]),
             models.Index(fields=["contact"]),
             models.Index(fields=["deleted_at"]),
             models.Index(fields=["created_at"]),
         ]
 
-    @property
-    def project_number(self):
-        return f"SL2026{self.pk:05d}"
-
     def __str__(self):
+        if self.project_number:
+            return f"{self.project_number} - {self.title}"
         return self.title
 
     def clean(self):

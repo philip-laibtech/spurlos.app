@@ -56,6 +56,7 @@ class DocumentUploadView(LoginRequiredMixin, View):
             doc = create_document(
                 file=d["file"],
                 title=d.get("title", ""),
+                category=d.get("category", ""),
                 description=d.get("description", ""),
                 company=d.get("company"),
                 contact=d.get("contact"),

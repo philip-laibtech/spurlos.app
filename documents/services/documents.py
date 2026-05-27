@@ -55,6 +55,7 @@ def validate_uploaded_document_file(uploaded_file) -> None:
 def create_document(
     file,
     title: str = "",
+    category: str = "",
     description: str = "",
     company=None,
     contact=None,
@@ -76,6 +77,7 @@ def create_document(
     doc = Document(
         document_id=document_id,
         title=title,
+        category=category,
         description=description,
         file=file,
         original_filename=original_filename,
@@ -92,7 +94,7 @@ def create_document(
     return doc
 
 
-ALLOWED_UPDATE_FIELDS = {"title", "description", "company", "contact", "project", "task"}
+ALLOWED_UPDATE_FIELDS = {"title", "category", "description", "company", "contact", "project", "task"}
 
 
 def update_document(document: Document, **data) -> Document:
