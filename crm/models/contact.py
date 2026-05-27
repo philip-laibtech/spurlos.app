@@ -4,9 +4,9 @@ from django.db import models
 
 class Contact(models.Model):
     class Salutation(models.TextChoices):
-        HERR = "herr", "Herr"
-        FRAU = "frau", "Frau"
-        DIVERS = "divers", "Divers"
+        HERR = "herr", "Mr."
+        FRAU = "frau", "Mrs."
+        DIVERS = "divers", "Unknown"
 
     class Language(models.TextChoices):
         DE = "de", "German"

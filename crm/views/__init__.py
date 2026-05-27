@@ -15,7 +15,9 @@ from .contacts import (
     ContactCreateView,
     ContactDeleteView,
     ContactDetailView,
+    ContactEmailCreateView,
     ContactListView,
+    ContactPhoneCreateView,
     ContactUpdateView,
 )
 
@@ -36,4 +38,6 @@ __all__ = [
     "ContactCreateView",
     "ContactUpdateView",
     "ContactDeleteView",
+    "ContactEmailCreateView",
+    "ContactPhoneCreateView",
 ]

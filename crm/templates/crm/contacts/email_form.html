@@ -1,0 +1,43 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}{{ title }} – {{ contact }} – spurlos{% endblock %}
+
+{% block content %}
+<div class="fh">
+  <a href="{% url 'crm:contact_detail' contact.pk %}" class="fh-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    {{ contact }}
+  </a>
+  <h1 class="fh-title">{{ title }}</h1>
+</div>
+
+<form method="post" novalidate class="fi" style="max-width:520px;">
+  {% csrf_token %}
+  <div class="fc">
+    <div class="fc-body fg2">
+      {% for field in form %}
+      {% if field.html_name == 'is_primary' %}
+      <div class="ff fg-full {% if field.errors %}has-err{% endif %}">
+        <div class="fcheck">
+          {{ field }}
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        </div>
+        {% if field.errors %}<ul class="ferrs">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      {% else %}
+      <div class="ff {% if field.html_name == 'email' %}fg-full{% endif %} {% if field.errors %}has-err{% endif %}">
+        <label class="fl" for="{{ field.id_for_label }}">
+          {{ field.label }}{% if field.field.required %}<span class="req">*</span>{% endif %}
+        </label>
+        {{ field }}
+        {% if field.errors %}<ul class="ferrs">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  <div class="fa">
+    <button type="submit" class="btn-p">Save</button>
+    <a href="{% url 'crm:contact_detail' contact.pk %}" class="btn-s">Cancel</a>
+  </div>
+</form>
+{% endblock %}

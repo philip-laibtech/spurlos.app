@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, View
 
-from crm.forms import ContactForm
+from crm.forms import ContactEmailAddressAddForm, ContactForm, ContactPhoneNumberAddForm
 from crm.models import Contact
 from crm.selectors import get_contact_detail, get_contact_list
 from projects.selectors import get_projects_for_contact
@@ -73,3 +73,51 @@ class ContactDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         contact = get_object_or_404(Contact, pk=pk, deleted_at__isnull=True)
         return render(request, "crm/contacts/confirm_delete.html", {"contact": contact})
+
+
+class ContactEmailCreateView(LoginRequiredMixin, View):
+    def _get_contact(self, pk):
+        return get_object_or_404(Contact, pk=pk, deleted_at__isnull=True)
+
+    def get(self, request, contact_pk):
+        contact = self._get_contact(contact_pk)
+        form = ContactEmailAddressAddForm()
+        return render(request, "crm/contacts/email_form.html", {
+            "form": form, "contact": contact, "title": "Add Email Address",
+        })
+
+    def post(self, request, contact_pk):
+        contact = self._get_contact(contact_pk)
+        form = ContactEmailAddressAddForm(request.POST)
+        if form.is_valid():
+            email = form.save(commit=False)
+            email.contact = contact
+            email.save()
+            return redirect(reverse("crm:contact_detail", kwargs={"pk": contact.pk}))
+        return render(request, "crm/contacts/email_form.html", {
+            "form": form, "contact": contact, "title": "Add Email Address",
+        })
+
+
+class ContactPhoneCreateView(LoginRequiredMixin, View):
+    def _get_contact(self, pk):
+        return get_object_or_404(Contact, pk=pk, deleted_at__isnull=True)
+
+    def get(self, request, contact_pk):
+        contact = self._get_contact(contact_pk)
+        form = ContactPhoneNumberAddForm()
+        return render(request, "crm/contacts/phone_form.html", {
+            "form": form, "contact": contact, "title": "Add Phone Number",
+        })
+
+    def post(self, request, contact_pk):
+        contact = self._get_contact(contact_pk)
+        form = ContactPhoneNumberAddForm(request.POST)
+        if form.is_valid():
+            phone = form.save(commit=False)
+            phone.contact = contact
+            phone.save()
+            return redirect(reverse("crm:contact_detail", kwargs={"pk": contact.pk}))
+        return render(request, "crm/contacts/phone_form.html", {
+            "form": form, "contact": contact, "title": "Add Phone Number",
+        })

@@ -41,7 +41,23 @@ class ContactEmailAddressForm(forms.ModelForm):
         fields = ("contact", "email", "type", "is_primary")
 
 
+class ContactEmailAddressAddForm(forms.ModelForm):
+    """Used when adding an email from a contact's detail page."""
+
+    class Meta:
+        model = ContactEmailAddress
+        fields = ("email", "type", "is_primary")
+
+
 class ContactPhoneNumberForm(forms.ModelForm):
     class Meta:
         model = ContactPhoneNumber
         fields = ("contact", "phone_number", "type", "label", "is_primary")
+
+
+class ContactPhoneNumberAddForm(forms.ModelForm):
+    """Used when adding a phone number from a contact's detail page."""
+
+    class Meta:
+        model = ContactPhoneNumber
+        fields = ("phone_number", "type", "label", "is_primary")

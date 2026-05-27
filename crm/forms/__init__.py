@@ -5,7 +5,13 @@ from .company import (
     CompanyPhoneNumberAddForm,
     CompanyPhoneNumberForm,
 )
-from .contact import ContactEmailAddressForm, ContactForm, ContactPhoneNumberForm
+from .contact import (
+    ContactEmailAddressAddForm,
+    ContactEmailAddressForm,
+    ContactForm,
+    ContactPhoneNumberAddForm,
+    ContactPhoneNumberForm,
+)
 
 __all__ = [
     "CompanyForm",
@@ -15,5 +21,7 @@ __all__ = [
     "CompanyPhoneNumberAddForm",
     "ContactForm",
     "ContactEmailAddressForm",
+    "ContactEmailAddressAddForm",
     "ContactPhoneNumberForm",
+    "ContactPhoneNumberAddForm",
 ]
