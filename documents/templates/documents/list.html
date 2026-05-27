@@ -45,7 +45,6 @@
       </td>
       <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ doc.created_at|date:"d.m.Y" }}</td>
       <td style="padding:14px 16px;text-align:right;white-space:nowrap;" onclick="event.stopPropagation()">
-        <a href="{% url 'documents:document_detail' doc.pk %}" style="color:#64748b;font-size:.875rem;text-decoration:none;margin-right:12px;">View</a>
         <a href="{% url 'documents:document_download' doc.pk %}" style="color:#1d4ed8;font-size:.875rem;text-decoration:none;">Download</a>
       </td>
     </tr>

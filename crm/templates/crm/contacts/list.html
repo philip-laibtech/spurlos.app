@@ -20,16 +20,14 @@
   </thead>
   <tbody>
     {% for contact in contacts %}
-    <tr style="border-top:1px solid #e2e8f0;">
-      <td style="padding:14px 16px;font-weight:500;">
-        <a href="{% url 'crm:contact_detail' contact.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ contact }}</a>
-      </td>
-      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{% if contact.company %}<a href="{% url 'crm:company_detail' contact.company.pk %}" style="color:#64748b;text-decoration:none;">{{ contact.company.name }}</a>{% else %}—{% endif %}</td>
+    <tr onclick="window.location='{% url 'crm:contact_detail' contact.pk %}'" style="border-top:1px solid #e2e8f0;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+      <td style="padding:14px 16px;font-weight:500;color:#0f172a;">{{ contact }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;" onclick="event.stopPropagation()">{% if contact.company %}<a href="{% url 'crm:company_detail' contact.company.pk %}" style="color:#64748b;text-decoration:none;">{{ contact.company.name }}</a>{% else %}—{% endif %}</td>
       <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ contact.job_title|default:"—" }}</td>
       <td style="padding:14px 16px;font-size:.875rem;">
         <span style="background:#f0fdf4;color:#15803d;padding:2px 10px;border-radius:9999px;font-size:.75rem;font-weight:500;">{{ contact.get_status_display }}</span>
       </td>
-      <td style="padding:14px 16px;text-align:right;">
+      <td style="padding:14px 16px;text-align:right;" onclick="event.stopPropagation()">
         <a href="{% url 'crm:contact_update' contact.pk %}" style="color:#64748b;font-size:.875rem;text-decoration:none;margin-right:12px;">Edit</a>
         <a href="{% url 'crm:contact_delete' contact.pk %}" style="color:#ef4444;font-size:.875rem;text-decoration:none;">Delete</a>
       </td>
