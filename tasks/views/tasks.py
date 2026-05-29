@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import DetailView, ListView, View
 
 from tasks.forms import TaskForm
@@ -36,16 +37,23 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
 class TaskCreateView(LoginRequiredMixin, View):
     template_name = "tasks/form.html"
 
+    def _safe_next(self, request, url):
+        if url and url_has_allowed_host_and_scheme(url, allowed_hosts={request.get_host()}):
+            return url
+        return None
+
     def get(self, request):
         initial = {}
         project_pk = request.GET.get("project")
         if project_pk:
             initial["project"] = project_pk
         form = TaskForm(initial=initial)
-        return render(request, self.template_name, {"form": form})
+        next_url = self._safe_next(request, request.GET.get("next"))
+        return render(request, self.template_name, {"form": form, "next": next_url})
 
     def post(self, request):
         form = TaskForm(request.POST)
+        next_url = self._safe_next(request, request.POST.get("next"))
         if form.is_valid():
             d = form.cleaned_data
             task = create_task(
@@ -57,8 +65,8 @@ class TaskCreateView(LoginRequiredMixin, View):
                 status=d.get("status", ""),
                 priority=d.get("priority", ""),
             )
-            return redirect(reverse("tasks:task_detail", kwargs={"pk": task.pk}))
-        return render(request, self.template_name, {"form": form})
+            return redirect(next_url or reverse("tasks:task_detail", kwargs={"pk": task.pk}))
+        return render(request, self.template_name, {"form": form, "next": next_url})
 
 
 class TaskUpdateView(LoginRequiredMixin, View):

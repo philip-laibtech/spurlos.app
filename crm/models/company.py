@@ -34,13 +34,6 @@ class Company(models.Model):
     vat_number = models.CharField(max_length=50, blank=True)
     main_email = models.EmailField(blank=True)
     notes = models.TextField(blank=True)
-    hq_location = models.ForeignKey(
-        "crm.CompanyLocation",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="+",
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -83,7 +76,6 @@ class CompanyLocation(models.Model):
         choices=LocationType.choices,
         default=LocationType.OFFICE,
     )
-    is_headquarters = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -91,14 +83,6 @@ class CompanyLocation(models.Model):
         indexes = [
             models.Index(fields=["company"]),
             models.Index(fields=["type"]),
-            models.Index(fields=["is_headquarters"]),
-        ]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["company"],
-                condition=models.Q(is_headquarters=True),
-                name="unique_company_hq",
-            )
         ]
 
     def __str__(self):

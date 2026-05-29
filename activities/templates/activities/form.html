@@ -1,18 +1,18 @@
 {% extends "dashboard/base_app.html" %}
-{% block title %}{% if object %}Edit {{ object.title }}{% else %}Add Task{% endif %} – spurlos{% endblock %}
+{% load static %}
+{% block title %}{% if object %}Edit {{ object.title }}{% else %}Log Activity{% endif %} – spurlos{% endblock %}
 
 {% block content %}
 <div class="fh">
-  <a href="{% if object %}{% url 'tasks:task_detail' object.pk %}{% else %}{% url 'tasks:task_list' %}{% endif %}" class="fh-back">
+  <a href="{% if object %}{% url 'activities:activity_detail' object.pk %}{% else %}{% url 'activities:activity_list' %}{% endif %}" class="fh-back">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    {% if object %}{{ object.title }}{% else %}Tasks{% endif %}
+    {% if object %}{{ object.title }}{% else %}Activities{% endif %}
   </a>
-  <h1 class="fh-title">{% if object %}Edit {{ object.title }}{% else %}Add Task{% endif %}</h1>
+  <h1 class="fh-title">{% if object %}Edit {{ object.title }}{% else %}Log Activity{% endif %}</h1>
 </div>
 
 <form method="post" novalidate class="fi" style="max-width:560px;">
   {% csrf_token %}
-  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
   {% if form.non_field_errors %}
   <div class="fnfe"><ul>{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
@@ -35,7 +35,8 @@
 
   <div class="fa">
     <button type="submit" class="btn-p">Save</button>
-    <a href="{% if next %}{{ next }}{% elif object %}{% url 'tasks:task_detail' object.pk %}{% else %}{% url 'tasks:task_list' %}{% endif %}" class="btn-s">Cancel</a>
+    <a href="{% if object %}{% url 'activities:activity_detail' object.pk %}{% else %}{% url 'activities:activity_list' %}{% endif %}" class="btn-s">Cancel</a>
   </div>
 </form>
+<script src="{% static 'activities/js/activities.js' %}"></script>
 {% endblock %}

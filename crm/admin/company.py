@@ -6,7 +6,7 @@ from crm.models import Company, CompanyLocation, CompanyPhoneNumber
 class CompanyLocationInline(admin.TabularInline):
     model = CompanyLocation
     extra = 0
-    fields = ("name", "type", "address", "is_headquarters")
+    fields = ("name", "type", "address")
     autocomplete_fields = ("address",)
 
 
@@ -31,7 +31,7 @@ class CompanyAdmin(admin.ModelAdmin):
             "fields": ("website", "main_email"),
         }),
         ("Details", {
-            "fields": ("industry", "hq_location", "notes"),
+            "fields": ("industry", "notes"),
         }),
         ("Timestamps", {
             "fields": ("created_at", "updated_at", "deleted_at"),
@@ -42,8 +42,8 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(CompanyLocation)
 class CompanyLocationAdmin(admin.ModelAdmin):
-    list_display = ("name", "company", "type", "is_headquarters")
-    list_filter = ("type", "is_headquarters")
+    list_display = ("name", "company", "type")
+    list_filter = ("type",)
     search_fields = ("name", "company__name")
     autocomplete_fields = ("address",)
 

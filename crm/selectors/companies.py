@@ -10,7 +10,6 @@ def get_company_queryset() -> QuerySet:
 def get_company_list() -> QuerySet:
     return (
         get_company_queryset()
-        .select_related("hq_location__address")
         .prefetch_related("locations", "phone_numbers", "contacts")
         .order_by("name")
     )
@@ -19,11 +18,10 @@ def get_company_list() -> QuerySet:
 def get_company_detail(company_id: int) -> Company:
     return (
         get_company_queryset()
-        .select_related("hq_location__address")
         .prefetch_related(
             "locations__address",
             "phone_numbers",
-            "contacts",
+            "contacts__email_addresses",
         )
         .get(pk=company_id)
     )

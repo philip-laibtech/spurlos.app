@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView, View
 
+from activities.selectors import get_activities_for_project
 from projects.forms import ProjectForm
 from projects.models import Project
 from projects.selectors import get_project_detail, get_project_list, search_projects
@@ -31,6 +32,11 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return get_project_detail(self.kwargs["pk"])
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["project_activities"] = get_activities_for_project(self.object)
+        return ctx
 
 
 class ProjectCreateView(LoginRequiredMixin, View):

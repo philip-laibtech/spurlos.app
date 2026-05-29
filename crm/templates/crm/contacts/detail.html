@@ -178,6 +178,48 @@
   {% endwith %}
 </div>
 
+{# ── Activities ── #}
+<div style="margin-top:24px;background:#fff;padding:24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <h2 style="margin:0;font-size:1rem;font-weight:600;color:#0f172a;">Activities ({{ contact_activities.count }})</h2>
+    <a href="{% url 'activities:activity_create' %}?contact={{ contact.pk }}" style="font-size:.8rem;color:#1d4ed8;text-decoration:none;font-weight:500;">+ Log Activity</a>
+  </div>
+  {% if contact_activities %}
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">ID</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Type</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Title</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">Occurred</th>
+        <th style="text-align:left;padding:8px 12px;font-size:.75rem;color:#64748b;font-weight:600;">By</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for activity in contact_activities %}
+      <tr onclick="window.location='{% url 'activities:activity_detail' activity.pk %}'" style="border-top:1px solid #f1f5f9;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+        <td style="padding:10px 12px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ activity.activity_id|default:"—" }}</td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ activity.get_activity_type_display }}</td>
+        <td style="padding:10px 12px;font-weight:500;color:#0f172a;">{{ activity.title }}</td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ activity.occurred_at|date:"d.m.Y H:i" }}</td>
+        <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">
+          {% if activity.created_by %}
+            {% if activity.created_by.first_name or activity.created_by.last_name %}
+              {{ activity.created_by.first_name }} {{ activity.created_by.last_name }}
+            {% else %}
+              {{ activity.created_by.email }}
+            {% endif %}
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#94a3b8;font-size:.875rem;margin:0;">No activities yet. <a href="{% url 'activities:activity_create' %}?contact={{ contact.pk }}" style="color:#1d4ed8;">Log the first one.</a></p>
+  {% endif %}
+</div>
+
 {# ── Danger Zone ── #}
 <div style="margin-top:32px;padding:20px 24px;border:1px solid #fecaca;border-radius:12px;background:#fff;">
   <h3 style="margin:0 0 8px;font-size:.875rem;font-weight:600;color:#ef4444;">Danger Zone</h3>

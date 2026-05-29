@@ -24,7 +24,7 @@ class CompanyForm(forms.ModelForm):
 class CompanyLocationForm(forms.ModelForm):
     class Meta:
         model = CompanyLocation
-        fields = ("company", "address", "name", "type", "is_headquarters")
+        fields = ("company", "address", "name", "type")
 
 
 class CompanyLocationAddForm(forms.Form):
@@ -33,8 +33,6 @@ class CompanyLocationAddForm(forms.Form):
     # Location fields
     name = forms.CharField(max_length=255, label="Location name")
     type = forms.ChoiceField(choices=CompanyLocation.LocationType.choices, label="Type")
-    is_headquarters = forms.BooleanField(required=False, label="Is headquarters")
-
     # Address fields
     line1 = forms.CharField(max_length=255, label="Street")
     line2 = forms.CharField(max_length=255, required=False, label="Street line 2")

@@ -26,15 +26,6 @@
           {% if field.errors %}<ul class="ferrs">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
         </div>
         {% endif %}
-        {% if field.html_name == 'is_headquarters' %}
-        <div class="ff fg-full {% if field.errors %}has-err{% endif %}">
-          <div class="fcheck">
-            {{ field }}
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          </div>
-          {% if field.errors %}<ul class="ferrs">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
-        </div>
-        {% endif %}
       {% endfor %}
     </div>
   </div>

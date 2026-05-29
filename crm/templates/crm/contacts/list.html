@@ -12,6 +12,7 @@
   <thead>
     <tr style="background:#f1f5f9;">
       <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Name</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Email</th>
       <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Company</th>
       <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Title</th>
       <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Status</th>
@@ -21,6 +22,7 @@
     {% for contact in contacts %}
     <tr onclick="window.location='{% url 'crm:contact_detail' contact.pk %}'" style="border-top:1px solid #e2e8f0;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
       <td style="padding:14px 16px;font-weight:500;color:#0f172a;">{{ contact }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{% for email in contact.email_addresses.all %}{% if email.is_primary %}{{ email.email }}{% endif %}{% endfor %}</td>
       <td style="padding:14px 16px;color:#64748b;font-size:.875rem;" onclick="event.stopPropagation()">{% if contact.company %}<a href="{% url 'crm:company_detail' contact.company.pk %}" style="color:#64748b;text-decoration:none;">{{ contact.company.name }}</a>{% else %}—{% endif %}</td>
       <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ contact.job_title|default:"—" }}</td>
       <td style="padding:14px 16px;font-size:.875rem;">

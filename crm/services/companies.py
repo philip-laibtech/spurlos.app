@@ -1,5 +1,3 @@
-from django.core.exceptions import ValidationError
-
 from crm.models import Address, Company, CompanyLocation, CompanyPhoneNumber
 
 
@@ -24,18 +22,6 @@ def create_company_location(company: Company, address: Address, name: str, **dat
     location.save()
     return location
 
-
-def set_company_hq(company: Company, location: CompanyLocation) -> Company:
-    if location.company_id != company.pk:
-        raise ValidationError("Location does not belong to this company.")
-    CompanyLocation.objects.filter(company=company, is_headquarters=True).exclude(pk=location.pk).update(
-        is_headquarters=False
-    )
-    location.is_headquarters = True
-    location.save(update_fields=["is_headquarters", "updated_at"])
-    company.hq_location = location
-    company.save(update_fields=["hq_location", "updated_at"])
-    return company
 
 
 def add_company_phone_number(company: Company, phone_number: str, **data) -> CompanyPhoneNumber:

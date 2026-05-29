@@ -1,0 +1,64 @@
+{% extends "dashboard/base_app.html" %}
+{% block title %}Activities – spurlos{% endblock %}
+
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+  <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">Activities</h1>
+  <a href="{% url 'activities:activity_create' %}" style="background:#1d4ed8;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">+ Add Activity</a>
+</div>
+
+<form method="get" style="margin-bottom:20px;">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;max-width:640px;">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search activities…" style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;color:#0f172a;outline:none;">
+    <select name="type" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;color:#0f172a;background:#fff;outline:none;">
+      <option value="">All types</option>
+      {% for value, label in activity_types %}
+      <option value="{{ value }}" {% if selected_type == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" style="background:#f1f5f9;color:#374151;padding:8px 16px;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;cursor:pointer;">Filter</button>
+    {% if query or selected_type %}<a href="{% url 'activities:activity_list' %}" style="padding:8px 12px;font-size:.875rem;color:#64748b;text-decoration:none;align-self:center;">Clear</a>{% endif %}
+  </div>
+</form>
+
+{% if activities %}
+<table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07);">
+  <thead>
+    <tr style="background:#f1f5f9;">
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">ID</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Type</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Title</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Contact</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Company</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Project</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">Occurred</th>
+      <th style="text-align:left;padding:12px 16px;font-size:.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;">By</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for activity in activities %}
+    <tr onclick="window.location='{% url 'activities:activity_detail' activity.pk %}'" style="border-top:1px solid #e2e8f0;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+      <td style="padding:14px 16px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ activity.activity_id|default:"—" }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ activity.get_activity_type_display }}</td>
+      <td style="padding:14px 16px;font-weight:500;color:#0f172a;">{{ activity.title }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ activity.contact }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ activity.company.name|default:"—" }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ activity.project.title|default:"—" }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">{{ activity.occurred_at|date:"d.m.Y H:i" }}</td>
+      <td style="padding:14px 16px;color:#64748b;font-size:.875rem;">
+        {% if activity.created_by %}
+          {% if activity.created_by.first_name or activity.created_by.last_name %}
+            {{ activity.created_by.first_name }} {{ activity.created_by.last_name }}
+          {% else %}
+            {{ activity.created_by.email }}
+          {% endif %}
+        {% else %}—{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:#64748b;">No activities found. <a href="{% url 'activities:activity_create' %}">Log the first one.</a></p>
+{% endif %}
+{% endblock %}

@@ -6,6 +6,7 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, V
 
 from crm.forms import ContactEmailAddressAddForm, ContactForm, ContactPhoneNumberAddForm
 from crm.models import Contact, ContactEmailAddress, ContactPhoneNumber
+from activities.selectors import get_activities_for_contact
 from crm.selectors import get_contact_detail, get_contact_list
 from projects.selectors import get_projects_for_contact
 
@@ -28,6 +29,7 @@ class ContactDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["contact_projects"] = get_projects_for_contact(self.object)
+        ctx["contact_activities"] = get_activities_for_contact(self.object)
         return ctx
 
 

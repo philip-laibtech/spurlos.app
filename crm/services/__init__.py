@@ -2,7 +2,6 @@ from .companies import (
     add_company_phone_number,
     create_company,
     create_company_location,
-    set_company_hq,
     update_company,
 )
 from .contacts import (
@@ -18,7 +17,6 @@ __all__ = [
     "create_company",
     "update_company",
     "create_company_location",
-    "set_company_hq",
     "add_company_phone_number",
     "create_contact",
     "update_contact",

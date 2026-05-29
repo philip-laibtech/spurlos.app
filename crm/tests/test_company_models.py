@@ -32,25 +32,6 @@ class CompanyLocationStrTest(TestCase):
         self.assertEqual(str(location), "Acme - Zürich Office")
 
 
-class CompanyLocationHQConstraintTest(TestCase):
-    def test_only_one_hq_per_company(self):
-        company = _make_company()
-        address = _make_address()
-        CompanyLocation.objects.create(
-            company=company, address=address, name="HQ", is_headquarters=True
-        )
-        with self.assertRaises(IntegrityError):
-            CompanyLocation.objects.create(
-                company=company, address=address, name="HQ2", is_headquarters=True
-            )
-
-    def test_two_companies_can_each_have_hq(self):
-        c1 = _make_company(name="Company A")
-        c2 = _make_company(name="Company B")
-        address = _make_address()
-        CompanyLocation.objects.create(company=c1, address=address, name="HQ", is_headquarters=True)
-        CompanyLocation.objects.create(company=c2, address=address, name="HQ", is_headquarters=True)
-
 
 class CompanyPhoneConstraintTest(TestCase):
     def test_only_one_primary_phone_per_company(self):

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'projects',
     'tasks',
     'documents',
+    'activities',
 ]
 
 MEDIA_URL = '/media/'

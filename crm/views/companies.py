@@ -6,6 +6,7 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, V
 
 from crm.forms import CompanyForm, CompanyLocationAddForm, CompanyPhoneNumberAddForm
 from crm.models import Address, Company, CompanyLocation, CompanyPhoneNumber
+from activities.selectors import get_activities_for_company
 from crm.selectors import get_company_detail, get_company_list
 from projects.selectors import get_projects_for_company
 
@@ -28,6 +29,7 @@ class CompanyDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["company_projects"] = get_projects_for_company(self.object)
+        ctx["company_activities"] = get_activities_for_company(self.object)
         return ctx
 
 
@@ -99,7 +101,6 @@ class CompanyLocationCreateView(LoginRequiredMixin, View):
                 address=address,
                 name=d["name"],
                 type=d["type"],
-                is_headquarters=d["is_headquarters"],
             )
             return redirect(reverse("crm:company_detail", kwargs={"pk": company.pk}))
         return render(request, "crm/companies/location_form.html", {
@@ -118,7 +119,6 @@ class CompanyLocationUpdateView(LoginRequiredMixin, View):
         initial = {
             "name": location.name,
             "type": location.type,
-            "is_headquarters": location.is_headquarters,
             "line1": location.address.line1,
             "line2": location.address.line2,
             "postal_code": location.address.postal_code,
@@ -146,7 +146,6 @@ class CompanyLocationUpdateView(LoginRequiredMixin, View):
             address.save()
             location.name = d["name"]
             location.type = d["type"]
-            location.is_headquarters = d["is_headquarters"]
             location.save()
             return redirect(reverse("crm:company_detail", kwargs={"pk": company.pk}))
         return render(request, "crm/companies/location_form.html", {
