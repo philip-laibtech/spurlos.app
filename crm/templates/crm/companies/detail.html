@@ -3,7 +3,8 @@
 
 {% block content %}
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-  <a href="{% url 'crm:company_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; Companies</a>
+  <button onclick="history.back()" style="background:none;border:none;cursor:pointer;color:#64748b;font-size:.875rem;padding:0;">&larr; Back</button>
+  <a href="{% url 'crm:company_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;background:#f1f5f9;padding:4px 10px;border-radius:6px;">All Companies</a>
   <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{{ company.name }}</h1>
 </div>
 
@@ -117,8 +118,8 @@
     </thead>
     <tbody>
       {% for contact in company.contacts.all %}
-      <tr style="border-top:1px solid #f1f5f9;">
-        <td style="padding:10px 12px;"><a href="{% url 'crm:contact_detail' contact.pk %}" style="color:#1d4ed8;text-decoration:none;font-size:.875rem;">{{ contact }}</a></td>
+      <tr onclick="window.location='{% url 'crm:contact_detail' contact.pk %}'" style="border-top:1px solid #f1f5f9;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+        <td style="padding:10px 12px;color:#0f172a;font-size:.875rem;">{{ contact }}</td>
         <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{% for email in contact.email_addresses.all %}{% if email.is_primary %}{{ email.email }}{% endif %}{% endfor %}</td>
         <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ contact.job_title|default:"—" }}</td>
         <td style="padding:10px 12px;font-size:.875rem;color:#64748b;">{{ contact.get_status_display }}</td>
@@ -150,9 +151,9 @@
     </thead>
     <tbody>
       {% for project in company_projects %}
-      <tr style="border-top:1px solid #f1f5f9;">
+      <tr onclick="window.location='{% url 'projects:project_detail' project.pk %}'" style="border-top:1px solid #f1f5f9;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
         <td style="padding:10px 12px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ project.project_number }}</td>
-        <td style="padding:10px 12px;font-weight:500;"><a href="{% url 'projects:project_detail' project.pk %}" style="color:#0f172a;text-decoration:none;font-size:.875rem;">{{ project.title }}</a></td>
+        <td style="padding:10px 12px;font-weight:500;color:#0f172a;font-size:.875rem;">{{ project.title }}</td>
         <td style="padding:10px 12px;"><span class="badge badge-{{ project.status }}">{{ project.get_status_display }}</span></td>
         <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ project.company.name }}</td>
         <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">
@@ -194,12 +195,12 @@
     <tbody>
       {% for doc in company_docs %}
       {% if not doc.deleted_at %}
-      <tr style="border-top:1px solid #f1f5f9;">
+      <tr onclick="window.location='{% url 'documents:document_detail' doc.pk %}'" style="border-top:1px solid #f1f5f9;cursor:pointer;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
         <td style="padding:10px 12px;color:#94a3b8;font-size:.8rem;font-family:monospace;">{{ doc.document_id|default:"—" }}</td>
-        <td style="padding:10px 12px;font-size:.875rem;"><a href="{% url 'documents:document_detail' doc.pk %}" style="color:#1d4ed8;text-decoration:none;">{{ doc.title }}</a></td>
+        <td style="padding:10px 12px;font-size:.875rem;color:#0f172a;">{{ doc.title }}</td>
         <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ doc.original_filename|default:"—" }}</td>
         <td style="padding:10px 12px;color:#64748b;font-size:.875rem;">{{ doc.created_at|date:"d.m.Y" }}</td>
-        <td style="padding:10px 12px;text-align:right;"><a href="{% url 'documents:document_download' doc.pk %}" style="color:#1d4ed8;font-size:.875rem;text-decoration:none;">Download</a></td>
+        <td style="padding:10px 12px;text-align:right;" onclick="event.stopPropagation()"><a href="{% url 'documents:document_download' doc.pk %}" style="color:#1d4ed8;font-size:.875rem;text-decoration:none;">Download</a></td>
       </tr>
       {% endif %}
       {% endfor %}

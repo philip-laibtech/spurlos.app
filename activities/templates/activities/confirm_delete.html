@@ -3,7 +3,7 @@
 
 {% block content %}
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-  <a href="{% url 'activities:activity_detail' activity.pk %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; {{ activity.title }}</a>
+  <button onclick="history.back()" style="background:none;border:none;cursor:pointer;color:#64748b;font-size:.875rem;padding:0;">&larr; Back</button>
   <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">Archive Activity</h1>
 </div>
 

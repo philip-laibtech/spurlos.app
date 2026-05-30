@@ -3,7 +3,8 @@
 
 {% block content %}
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-  <a href="{% url 'tasks:task_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; Tasks</a>
+  <button onclick="history.back()" style="background:none;border:none;cursor:pointer;color:#64748b;font-size:.875rem;padding:0;">&larr; Back</button>
+  <a href="{% url 'tasks:task_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;background:#f1f5f9;padding:4px 10px;border-radius:6px;">All Tasks</a>
   <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{{ task.title }}</h1>
   <div style="margin-left:auto;display:flex;gap:8px;">
     <a href="{% url 'tasks:task_update' task.pk %}" style="background:#f1f5f9;color:#0f172a;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.875rem;font-weight:500;">Edit</a>

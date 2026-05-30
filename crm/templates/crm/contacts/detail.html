@@ -3,7 +3,8 @@
 
 {% block content %}
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
-  <a href="{% url 'crm:contact_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;">&larr; Contacts</a>
+  <button onclick="history.back()" style="background:none;border:none;cursor:pointer;color:#64748b;font-size:.875rem;padding:0;">&larr; Back</button>
+  <a href="{% url 'crm:contact_list' %}" style="color:#64748b;text-decoration:none;font-size:.875rem;background:#f1f5f9;padding:4px 10px;border-radius:6px;">All Contacts</a>
   <h1 style="margin:0;font-size:1.5rem;font-weight:700;color:#0f172a;">{% if contact.salutation %}{{ contact.get_salutation_display }} {% endif %}{{ contact }}</h1>
 </div>
 
